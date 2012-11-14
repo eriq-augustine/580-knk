@@ -5,9 +5,6 @@ require './puzzle_parser.rb'
 puzzleFile = ARGV.shift()
 puzzles = PuzzleParser.parseFile(puzzleFile)
 
-count = 0
 puzzles.each{|puzzle|
-   count += puzzle.solve()
+   puts puzzle.solve().join(' OR ')
 }
-
-puts "\n#{count.to_f / puzzles.length() * 100}% Expressions Found"
