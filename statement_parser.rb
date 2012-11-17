@@ -251,7 +251,6 @@ class OfThisAndThatStatementHandler < StatementHandler
    @@instance = OfThisAndThatStatementHandler.new()
 end
 
-# Note that The converse of this (I as the subject) adds no information and was removed by a GlobalReplacer.
 # "<other> could say that <statement>"
 # The statement is usully "I am a (knight|knave)", but there is no reason not to abstract is some.
 # This statement means that either the substatement is true and other is a knight, or it is false and other is a knave
@@ -262,6 +261,11 @@ class CouldSayThatStatementHandler < StatementHandler
          substatement = StatementHandler::handleStatement(contextPerson, otherPerson, match[1])
          if (substatement)
             return "((#{otherPerson} = KNIGHT) && (#{substatement})) || ((#{otherPerson} = KNAVE) && !(#{substatement}))"
+         end
+      elsif (match = statement.downcase.match(/^i (?:could|would) #{TELLING_WORDS} (?:you )?that (.+)$/))
+         substatement = StatementHandler::handleStatement(contextPerson, otherPerson, match[1])
+         if (substatement)
+            return "((#{contextPerson} = KNIGHT) && (#{substatement})) || ((#{contextPerson} = KNAVE) && !(#{substatement}))"
          end
       end
 
@@ -323,6 +327,7 @@ class GlobalReplacer
    end
 end
 
+=begin
 # Don't be fooled, this adds no info.
 # "I would tell you that ..." -> "..."
 class WouldTellYouThatReplacer < GlobalReplacer
@@ -332,6 +337,7 @@ class WouldTellYouThatReplacer < GlobalReplacer
 
    @@instance = WouldTellYouThatReplacer.new()
 end
+=end
 
 # TODO(eriq): More general. There is usually an or ofter this.
 # "At least one of the following is true: that .A. or that .B." -> ".A. or .B."
