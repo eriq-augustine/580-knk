@@ -1,11 +1,24 @@
 require './puzzle.rb'
 
 class PuzzleParser
-   def self.parseFile(filename)
+   def self.parseFile(filename, onePerLine)
       puzzles = []
 
+      count = 0
       file = File.open(filename, 'r')
+
       file.each{|line|
+         count += 1
+
+         if (!onePerLine)
+            if (count == 1)
+               next
+            elsif (count == 3)
+               count = 0
+               next
+            end
+         end
+
          puzzle = nil
          if (puzzle = parsePuzzle(line))
             puzzles << puzzle
